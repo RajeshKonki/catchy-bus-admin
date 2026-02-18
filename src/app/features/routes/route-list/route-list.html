@@ -23,42 +23,76 @@
 </div>
 
 <!-- Route Cards Grid -->
-<div *ngIf="!loading && !error" class="card-grid">
-    <div *ngFor="let route of filteredRoutes" class="card">
-        <div class="card-header">
-            <div class="header-content">
-                <h3>{{ route.name }}</h3>
-                <span class="status-badge" [ngClass]="route.status?.toLowerCase() || 'active'">
-                    {{ route.status || 'Active' }}
-                </span>
-            </div>
-        </div>
-        <div class="card-content">
-            <p><i class="fas fa-map-pin"></i> <strong>From:</strong> {{ route.startPoint }}</p>
-            <p><i class="fas fa-flag-checkered"></i> <strong>To:</strong> {{ route.endPoint }}</p>
-            <p><i class="fas fa-map-marker-alt"></i> {{ route.stops?.length || 0 }} stops</p>
-            <p *ngIf="route.distance"><i class="fas fa-road"></i> {{ route.distance }} km</p>
-            <!-- Stops preview chips -->
-            <div class="route-stops-preview" *ngIf="route.stops?.length">
-                <ng-container *ngFor="let stop of route.stops; let i = index; let last = last">
-                    <span class="stop-chip">
-                        <i class="fas fa-circle" style="font-size:0.5rem;"></i> {{ stop.name || stop }}
+<!-- Route List Table -->
+<div *ngIf="!loading && !error && filteredRoutes.length > 0" class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Route Name</th>
+                <th>Status</th>
+                <th>Start Point</th>
+                <th>End Point</th>
+                <th>Stops</th>
+                <th>Distance</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let route of paginatedRoutes">
+                <td>
+                    <strong>{{ route.name }}</strong>
+                </td>
+                <td>
+                    <span class="status-badge" [ngClass]="route.status?.toLowerCase() || 'active'">
+                        {{ route.status || 'Active' }}
                     </span>
-                    <span class="stop-arrow" *ngIf="!last">›</span>
-                </ng-container>
-            </div>
-        </div>
-        <div class="card-actions">
-            <a [routerLink]="['/routes', route.id, 'map']" class="btn btn-outline-primary">
-                <i class="fas fa-map"></i> Map
-            </a>
-            <a [routerLink]="['/routes', route.id, 'edit']" class="btn btn-secondary">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            <button (click)="deleteRoute(route.id)" class="btn btn-danger">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
+                </td>
+                <td>{{ route.startPoint }}</td>
+                <td>{{ route.endPoint }}</td>
+                <td>
+                    <div class="route-stops-preview" *ngIf="route.stops?.length">
+                        <ng-container *ngFor="let stop of route.stops; let i = index; let last = last">
+                            <span class="stop-chip" *ngIf="i < 3">
+                                {{ stop.name || stop }}
+                            </span>
+                            <span class="stop-arrow" *ngIf="i < 2 && !last">›</span>
+                        </ng-container>
+                        <span class="stop-chip extra" *ngIf="route.stops.length > 3">
+                            +{{ route.stops.length - 3 }}
+                        </span>
+                    </div>
+                    <span *ngIf="!route.stops?.length" class="text-muted">No stops</span>
+                </td>
+                <td>{{ route.distance }} km</td>
+                <td>
+                    <div class="action-buttons">
+                        <a [routerLink]="['/routes', route.id, 'map']" class="btn-icon" title="Map">
+                            <i class="fas fa-map"></i>
+                        </a>
+                        <a [routerLink]="['/routes', route.id, 'edit']" class="btn-icon" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button (click)="deleteRoute(route.id)" class="btn-icon text-red" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="btn btn-secondary btn-sm">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span class="page-info">
+            Page {{ currentPage }} of {{ totalPages }}
+        </span>
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages"
+            class="btn btn-secondary btn-sm">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
 </div>
 

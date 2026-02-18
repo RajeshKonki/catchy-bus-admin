@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-college-list',
@@ -15,6 +16,8 @@ export class CollegeList implements OnInit {
   error = '';
   searchTerm = '';
 
+  constructor(private cdr: ChangeDetectorRef, private confirmDialog: ConfirmDialogService) { }
+
   ngOnInit() {
     setTimeout(() => {
       this.colleges = [
@@ -26,11 +29,31 @@ export class CollegeList implements OnInit {
         { id: '6', name: 'BMS College of Engineering', status: 'Inactive', contactPerson: 'Dr. Mohan Kumar', email: 'principal@bmsce.ac.in', phone: '+91 80-2662-2130', address: 'Bull Temple Road, Basavanagudi, Bangalore - 560019', logo: '' },
       ];
       this.loading = false;
-    }, 600);
+      this.cdr.detectChanges();
+    }, 1000);
+  }
+
+  itemsPerPage = 5;
+  currentPage = 1;
+
+  get totalPages() {
+    return Math.ceil(this.filteredColleges.length / this.itemsPerPage);
+  }
+
+  get paginatedColleges() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredColleges.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   onSearch(event: Event) {
     this.searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    this.currentPage = 1; // Reset to first page on search
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
   }
 
   get filteredColleges() {
@@ -43,9 +66,20 @@ export class CollegeList implements OnInit {
     );
   }
 
-  deleteCollege(id: string) {
-    if (confirm('Are you sure you want to delete this college?')) {
+  async deleteCollege(id: string) {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete College',
+      message: 'Are you sure you want to delete this college? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.colleges = this.colleges.filter(c => c.id !== id);
+      if (this.currentPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = this.totalPages;
+      }
+      this.cdr.detectChanges();
     }
   }
 }

@@ -33,6 +33,15 @@
             <div class="nav-divider"></div>
             <div class="nav-section-label">Management</div>
 
+            <!-- Super Admin only -->
+            <a *ngIf="!isCollegeAdmin" routerLink="/colleges" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-university"></i>
+                <span *ngIf="!isSidebarCollapsed">Colleges</span>
+            </a>
+            <a routerLink="/routes" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span *ngIf="!isSidebarCollapsed">Routes</span>
+            </a>
             <a routerLink="/buses" routerLinkActive="active" class="nav-item">
                 <i class="fas fa-bus"></i>
                 <span *ngIf="!isSidebarCollapsed">Buses</span>
@@ -41,23 +50,12 @@
                 <i class="fas fa-user-tie"></i>
                 <span *ngIf="!isSidebarCollapsed">Drivers</span>
             </a>
-            <a routerLink="/routes" routerLinkActive="active" class="nav-item">
-                <i class="fas fa-route"></i>
-                <span *ngIf="!isSidebarCollapsed">Routes</span>
-            </a>
-            <a routerLink="/colleges" routerLinkActive="active" class="nav-item">
-                <i class="fas fa-university"></i>
-                <span *ngIf="!isSidebarCollapsed">Colleges</span>
-            </a>
             <a routerLink="/students" routerLinkActive="active" class="nav-item">
                 <i class="fas fa-user-graduate"></i>
                 <span *ngIf="!isSidebarCollapsed">Students</span>
             </a>
-
-            <div class="nav-divider"></div>
-            <div class="nav-section-label">System</div>
-
-            <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+            <!-- Super Admin only -->
+            <a *ngIf="!isCollegeAdmin" routerLink="/settings" routerLinkActive="active" class="nav-item">
                 <i class="fas fa-cog"></i>
                 <span *ngIf="!isSidebarCollapsed">Settings</span>
             </a>
@@ -69,15 +67,19 @@
                     style="width:32px;height:32px;font-size:0.8rem;border-radius:6px;background:rgba(255,255,255,0.15);color:#fff;flex-shrink:0;">
                     <i class="fas fa-user"></i>
                 </div>
-                <div *ngIf="!isSidebarCollapsed" style="min-width:0;">
+                <div *ngIf="!isSidebarCollapsed" style="min-width:0;flex:1;">
                     <div
                         style="font-size:0.82rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                        Admin User</div>
+                        {{ currentUser?.name || 'Admin User' }}</div>
                     <div
                         style="font-size:0.68rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.05em;">
-                        Administrator</div>
+                        {{ currentUser?.role || 'Administrator' }}</div>
                 </div>
             </a>
+            <button (click)="logout()" class="sidebar-logout-btn" title="Logout">
+                <i class="fas fa-sign-out-alt"></i>
+                <span *ngIf="!isSidebarCollapsed">Logout</span>
+            </button>
         </div>
     </aside>
 
@@ -96,11 +98,11 @@
                 </div>
                 <div class="user-profile">
                     <div class="profile-info">
-                        <span class="name">Admin User</span>
-                        <span class="role">Administrator</span>
+                        <span class="name">{{ currentUser?.name || 'Admin User' }}</span>
+                        <span class="role">{{ currentUser?.role || 'Administrator' }}</span>
                     </div>
                     <div class="avatar">
-                        A
+                        {{ (currentUser?.name || 'A')[0].toUpperCase() }}
                     </div>
                 </div>
             </div>

@@ -62,11 +62,36 @@
 
             <div class="form-group">
                 <label for="address">Address *</label>
-                <textarea id="address" formControlName="address" class="form-control" rows="3"
-                    placeholder="e.g. K.R. Road, V.V. Puram, Bangalore"></textarea>
+                <div class="address-with-map">
+                    <textarea id="address" formControlName="address" class="form-control" rows="2"
+                        placeholder="e.g. K.R. Road, V.V. Puram, Bangalore"></textarea>
+                    <button type="button" class="btn-pick-map" (click)="openMapPicker()">
+                        <i class="fas fa-map-marker-alt"></i> Pick on Map
+                    </button>
+                </div>
                 <div class="validation-error"
                     *ngIf="collegeForm.get('address')?.touched && collegeForm.get('address')?.invalid">
                     Address is required
+                </div>
+
+                <!-- Coordinates display -->
+                <div class="coords-display" *ngIf="selectedLat !== null && selectedLng !== null">
+                    <div class="coord-badge">
+                        <i class="fas fa-crosshairs"></i>
+                        <span class="coord-label">Latitude</span>
+                        <span class="coord-value">{{ selectedLat?.toFixed(6) }}</span>
+                    </div>
+                    <div class="coord-badge">
+                        <i class="fas fa-crosshairs"></i>
+                        <span class="coord-label">Longitude</span>
+                        <span class="coord-value">{{ selectedLng?.toFixed(6) }}</span>
+                    </div>
+                    <button type="button" class="btn-clear-coords" (click)="clearLocation()" title="Clear location">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="coords-hint" *ngIf="selectedLat === null">
+                    <i class="fas fa-info-circle"></i> Use "Pick on Map" to set precise coordinates
                 </div>
             </div>
 
@@ -106,6 +131,46 @@
                 </div>
             </div>
 
+            <!-- Login Credentials -->
+            <div class="form-section-title">
+                <i class="fas fa-lock"></i> Login Credentials
+            </div>
+
+            <div class="credentials-info" *ngIf="isEditMode">
+                <i class="fas fa-info-circle"></i>
+                Leave password blank to keep the existing password unchanged.
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="loginEmail">Login Email *</label>
+                    <input id="loginEmail" type="email" formControlName="loginEmail" class="form-control"
+                        placeholder="e.g. college@bit.edu.in">
+                    <div class="validation-error"
+                        *ngIf="collegeForm.get('loginEmail')?.touched && collegeForm.get('loginEmail')?.invalid">
+                        Valid login email is required
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <label for="loginPassword">
+                        Login Password {{ isEditMode ? '(optional)' : '*' }}
+                    </label>
+                    <div class="password-field">
+                        <input id="loginPassword" [type]="showPassword ? 'text' : 'password'"
+                            formControlName="loginPassword" class="form-control"
+                            [placeholder]="isEditMode ? 'Leave blank to keep current' : 'Enter password'">
+                        <button type="button" class="btn-toggle-password" (click)="showPassword = !showPassword"
+                            [title]="showPassword ? 'Hide password' : 'Show password'">
+                            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                        </button>
+                    </div>
+                    <div class="validation-error"
+                        *ngIf="collegeForm.get('loginPassword')?.touched && collegeForm.get('loginPassword')?.invalid">
+                        Password is required
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label for="status">Status *</label>
                 <select id="status" formControlName="status" class="form-control">
@@ -118,10 +183,16 @@
 
     <div class="form-actions">
         <a routerLink="/colleges" class="btn btn-ghost">Cancel</a>
-        <button type="submit" class="btn btn-primary" [disabled]="collegeForm.invalid || submitting">
+        <button type="submit" class="btn btn-primary" [disabled]="collegeForm.invalid || submitting"
+            (click)="onSubmit()">
             <i class="fas fa-spinner fa-spin" *ngIf="submitting"></i>
             <i class="fas fa-save" *ngIf="!submitting"></i>
             {{ submitting ? 'Saving...' : (isEditMode ? 'Update College' : 'Create College') }}
         </button>
     </div>
 </div>
+
+<!-- Map Picker Modal -->
+<app-map-picker *ngIf="showMapPicker" [initialLat]="selectedLat ?? 17.0018" [initialLng]="selectedLng ?? 81.7877"
+    (locationSelected)="onLocationSelected($event)" (closed)="onMapPickerClosed()">
+</app-map-picker>

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -14,6 +14,7 @@ export class BusForm implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   busForm: FormGroup;
   isEditMode = false;
@@ -69,7 +70,8 @@ export class BusForm implements OnInit {
           status: 'Active'
         });
         this.loading = false;
-      }, 500);
+        this.cdr.detectChanges();
+      }, 1000);
     }
   }
 

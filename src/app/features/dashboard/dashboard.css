@@ -10,6 +10,112 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* ── College Identity Banner ─────────────────────────────── */
+.college-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle gradient accent on the left edge */
+.college-banner::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--deep-blue), #2563eb);
+  border-radius: 4px 0 0 4px;
+}
+
+.college-banner-logo {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.college-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+}
+
+.college-logo-fallback {
+  font-size: 2rem;
+  color: var(--deep-blue);
+  opacity: 0.5;
+}
+
+.college-banner-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.college-banner-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.3rem;
+}
+
+.college-banner-address {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.college-banner-address i { color: var(--deep-blue); font-size: 0.75rem; }
+
+.college-banner-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.college-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.7rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.college-chip i { font-size: 0.7rem; color: var(--deep-blue); }
+
+.college-chip.active {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #15803d;
+}
+
+.college-chip.active i { color: #16a34a; font-size: 0.55rem; }
+
+
+
 /* ── Header ──────────────────────────────────────────────── */
 .header-section {
   display: flex;

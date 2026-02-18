@@ -29,6 +29,13 @@ import { StudentList } from './features/students/student-list/student-list';
 import { StudentDetail } from './features/students/student-detail/student-detail';
 import { StudentForm } from './features/students/student-form/student-form';
 
+// Tracking
+import { TrackingMap } from './features/tracking/tracking-map/tracking-map';
+
+// Settings
+import { Profile } from './features/settings/profile/profile';
+import { ChangePassword } from './features/settings/change-password/change-password';
+
 // Dashboard
 import { Dashboard } from './features/dashboard/dashboard';
 
@@ -78,9 +85,11 @@ export const routes: Routes = [
             { path: 'students/:id', component: StudentDetail },
             { path: 'students/:id/edit', component: StudentForm },
 
-            // Tracking & Settings (placeholders until implemented)
-            { path: 'tracking', redirectTo: 'dashboard' },
-            { path: 'settings', redirectTo: 'dashboard' },
+            // Tracking & Settings
+            { path: 'tracking', component: TrackingMap },
+            { path: 'settings', redirectTo: 'settings/profile', pathMatch: 'full' },
+            { path: 'settings/profile', component: Profile },
+            { path: 'settings/change-password', component: ChangePassword },
         ]
     },
     { path: '**', redirectTo: '' }

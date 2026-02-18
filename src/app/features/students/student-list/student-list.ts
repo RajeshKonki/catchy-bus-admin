@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-student-list',
@@ -14,6 +15,8 @@ export class StudentList implements OnInit {
   filteredStudents: any[] = [];
   loading = true;
   error = '';
+
+  constructor(private cdr: ChangeDetectorRef, private confirmDialog: ConfirmDialogService) { }
 
   ngOnInit() {
     setTimeout(() => {
@@ -29,7 +32,20 @@ export class StudentList implements OnInit {
       ];
       this.filteredStudents = [...this.students];
       this.loading = false;
-    }, 600);
+      this.cdr.detectChanges();
+    }, 1000);
+  }
+
+  itemsPerPage = 5;
+  currentPage = 1;
+
+  get totalPages() {
+    return Math.ceil(this.filteredStudents.length / this.itemsPerPage);
+  }
+
+  get paginatedStudents() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredStudents.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   onSearch(event: Event) {
@@ -40,12 +56,30 @@ export class StudentList implements OnInit {
       s.collegeName?.toLowerCase().includes(query) ||
       s.email?.toLowerCase().includes(query)
     );
+    this.currentPage = 1; // Reset to first page on search
   }
 
-  deleteStudent(id: string) {
-    if (confirm('Are you sure you want to delete this student?')) {
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  async deleteStudent(id: string) {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Student',
+      message: 'Are you sure you want to delete this student? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.students = this.students.filter(s => s.id !== id);
       this.filteredStudents = this.filteredStudents.filter(s => s.id !== id);
+      if (this.currentPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = this.totalPages;
+      }
+      this.cdr.detectChanges();
     }
   }
 }

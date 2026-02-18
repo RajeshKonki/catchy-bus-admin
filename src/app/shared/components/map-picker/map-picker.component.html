@@ -1,0 +1,41 @@
+<!-- Modal Backdrop -->
+<div class="mp-backdrop" (click)="close()"></div>
+
+<!-- Modal -->
+<div class="mp-modal">
+    <div class="mp-header">
+        <h3><i class="fas fa-map-marker-alt"></i> Pick Location on Map</h3>
+        <button class="mp-close" (click)="close()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="mp-search-bar">
+        <div class="mp-search-wrapper">
+            <i class="fas fa-search mp-search-icon"></i>
+            <input type="text" class="mp-search-input" placeholder="Search for a place..." [(ngModel)]="searchQuery"
+                (keydown.enter)="searchPlace()" />
+            <button class="mp-search-btn" (click)="searchPlace()">Search</button>
+        </div>
+    </div>
+
+    <!-- Map -->
+    <div id="mp-map-container" class="mp-map"></div>
+
+    <!-- Coordinate Display -->
+    <div class="mp-coords" *ngIf="selectedLocation">
+        <i class="fas fa-crosshairs"></i>
+        <span>{{ selectedLocation.lat.toFixed(6) }}, {{ selectedLocation.lng.toFixed(6) }}</span>
+        <span class="mp-address-preview" *ngIf="selectedLocation.address">— {{ selectedLocation.address }}</span>
+    </div>
+    <div class="mp-coords mp-coords-empty" *ngIf="!selectedLocation">
+        <i class="fas fa-info-circle"></i> Click on the map or drag the marker to select a location
+    </div>
+
+    <!-- Actions -->
+    <div class="mp-actions">
+        <button class="btn-mp-cancel" (click)="close()">Cancel</button>
+        <button class="btn-mp-confirm" (click)="confirm()" [disabled]="!selectedLocation">
+            <i class="fas fa-check"></i> Confirm Location
+        </button>
+    </div>
+</div>

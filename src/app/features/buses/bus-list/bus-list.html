@@ -23,31 +23,63 @@
 </div>
 
 <!-- Bus Cards Grid -->
-<div *ngIf="!loading && !error" class="card-grid">
-    <div *ngFor="let bus of filteredBuses" class="card">
-        <div class="card-header">
-            <h3>{{ bus.busNumber }}</h3>
-            <span class="status-badge" [ngClass]="bus.status?.toLowerCase()">
-                {{ bus.status }}
-            </span>
-        </div>
-        <div class="card-content">
-            <p><i class="fas fa-tag"></i> {{ bus.title }}</p>
-            <p><i class="fas fa-route"></i> {{ bus.routeName || 'No Route' }}</p>
-            <p><i class="fas fa-university"></i> {{ bus.collegeName || 'N/A' }}</p>
-            <p><i class="fas fa-users"></i> {{ bus.capacity }} passengers</p>
-        </div>
-        <div class="card-actions">
-            <a [routerLink]="['/buses', bus.id]" class="btn btn-outline-primary">
-                <i class="fas fa-eye"></i> View
-            </a>
-            <a [routerLink]="['/buses', bus.id, 'edit']" class="btn btn-secondary">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            <button (click)="deleteBus(bus.id)" class="btn btn-danger">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
+<!-- Bus List Table -->
+<div *ngIf="!loading && !error && filteredBuses.length > 0" class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Bus Number</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Route</th>
+                <th>College</th>
+                <th>Capacity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let bus of paginatedBuses">
+                <td>
+                    <strong>{{ bus.busNumber }}</strong>
+                </td>
+                <td>{{ bus.title }}</td>
+                <td>
+                    <span class="status-badge" [ngClass]="bus.status?.toLowerCase()">
+                        {{ bus.status }}
+                    </span>
+                </td>
+                <td>{{ bus.routeName || 'No Route' }}</td>
+                <td>{{ bus.collegeName || 'N/A' }}</td>
+                <td>{{ bus.capacity }} passengers</td>
+                <td>
+                    <div class="action-buttons">
+                        <a [routerLink]="['/buses', bus.id]" class="btn-icon" title="View">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a [routerLink]="['/buses', bus.id, 'edit']" class="btn-icon" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button (click)="deleteBus(bus.id)" class="btn-icon text-red" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="btn btn-secondary btn-sm">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span class="page-info">
+            Page {{ currentPage }} of {{ totalPages }}
+        </span>
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages"
+            class="btn btn-secondary btn-sm">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
 </div>
 

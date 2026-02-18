@@ -345,10 +345,23 @@ label {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
   gap: 1rem;
   flex-wrap: wrap;
+
+  /* Stick to top of the scrollable content-wrapper */
+  position: sticky;
+  top: -2rem;           /* offset to cancel the 2rem padding of content-wrapper */
+  margin: -2rem -2rem 1.5rem -2rem;
+  padding: 1rem 2rem;
+  z-index: 20;
+
+  /* Background so content scrolls under it cleanly */
+  background: var(--bg-app);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
+
 
 .page-header h1 {
   font-size: 1.5rem;
@@ -720,6 +733,51 @@ input.search-input::placeholder { color: var(--text-muted); }
   margin-top: 0.3rem;
   font-style: italic;
 }
+
+/* Password field with show/hide toggle */
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field .form-control {
+  padding-right: 2.8rem;
+  flex: 1;
+}
+
+.btn-toggle-password {
+  position: absolute;
+  right: 0.65rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+  line-height: 1;
+}
+
+.btn-toggle-password:hover { color: var(--deep-blue); }
+
+/* Credentials info banner (edit mode hint) */
+.credentials-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #1e40af;
+  margin-bottom: 1rem;
+}
+
+.credentials-info i { color: #2563eb; font-size: 0.85rem; }
+
+
 
 /* Stop rows (used in route-form) */
 .stops-list {

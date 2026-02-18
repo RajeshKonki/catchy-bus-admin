@@ -10,6 +10,10 @@ export interface User {
     name?: string;
     fullName?: string;
     role?: string;
+    loginRole?: 'superadmin' | 'college';
+    collegeName?: string;
+    collegeLogo?: string;
+    collegeAddress?: string;
 }
 
 export interface LoginResponse {
@@ -29,7 +33,8 @@ export class AuthService {
 
     currentUser = signal<User | null>(this.getUserFromStorage());
 
-    login(credentials: { email: string; password: string }): Observable<LoginResponse> {
+    login(credentials: { email: string; password: string; role?: 'superadmin' | 'college' }): Observable<LoginResponse> {
+        const isCollege = credentials.role === 'college';
         // Mock login
         const mockResponse: LoginResponse = {
             success: true,
@@ -37,9 +42,15 @@ export class AuthService {
             user: {
                 id: '1',
                 email: credentials.email,
-                name: 'Admin User',
-                fullName: 'System Administrator',
-                role: 'SuperAdmin'
+                name: isCollege ? 'College Admin' : 'Admin User',
+                fullName: isCollege ? 'College Administrator' : 'System Administrator',
+                role: isCollege ? 'CollegeAdmin' : 'SuperAdmin',
+                loginRole: credentials.role ?? 'superadmin',
+                ...(isCollege && {
+                    collegeName: 'Bangalore Institute of Technology',
+                    collegeLogo: 'assets/logos/bit.svg',
+                    collegeAddress: 'K.R. Road, V.V. Puram, Bangalore - 560004'
+                })
             }
         };
 
@@ -59,6 +70,14 @@ export class AuthService {
 
     isAuthenticated(): boolean {
         return !!localStorage.getItem('adminToken');
+    }
+
+    get loginRole(): 'superadmin' | 'college' {
+        return this.currentUser()?.loginRole ?? 'superadmin';
+    }
+
+    get isCollegeAdmin(): boolean {
+        return this.loginRole === 'college';
     }
 
     private setSession(authResult: LoginResponse) {

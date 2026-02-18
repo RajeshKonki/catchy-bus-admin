@@ -114,6 +114,45 @@
                     </div>
                 </div>
             </div>
+            <!-- Login Credentials -->
+            <div class="form-section-title">
+                <i class="fas fa-lock"></i> Login Credentials
+            </div>
+
+            <div class="credentials-info" *ngIf="isEditMode">
+                <i class="fas fa-info-circle"></i>
+                Leave password blank to keep the existing password unchanged.
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="loginEmail">Login Email *</label>
+                    <input id="loginEmail" type="email" formControlName="loginEmail" class="form-control"
+                        placeholder="e.g. driver@bit.edu.in">
+                    <div class="validation-error"
+                        *ngIf="driverForm.get('loginEmail')?.touched && driverForm.get('loginEmail')?.invalid">
+                        Valid login email is required
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <label for="loginPassword">
+                        Login Password {{ isEditMode ? '(optional)' : '*' }}
+                    </label>
+                    <div class="password-field">
+                        <input id="loginPassword" [type]="showPassword ? 'text' : 'password'"
+                            formControlName="loginPassword" class="form-control"
+                            [placeholder]="isEditMode ? 'Leave blank to keep current' : 'Enter password'">
+                        <button type="button" class="btn-toggle-password" (click)="showPassword = !showPassword"
+                            [title]="showPassword ? 'Hide password' : 'Show password'">
+                            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                        </button>
+                    </div>
+                    <div class="validation-error"
+                        *ngIf="driverForm.get('loginPassword')?.touched && driverForm.get('loginPassword')?.invalid">
+                        Password is required
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 

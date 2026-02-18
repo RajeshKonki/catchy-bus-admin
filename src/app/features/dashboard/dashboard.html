@@ -1,9 +1,35 @@
 <div class="dashboard-container">
+
+    <!-- College Identity Banner (college admins only) -->
+    <div class="college-banner" *ngIf="isCollegeAdmin">
+        <div class="college-banner-logo">
+            <img *ngIf="currentUser?.collegeLogo" [src]="currentUser?.collegeLogo" [alt]="currentUser?.collegeName"
+                class="college-logo-img" (error)="logoError($event)">
+            <div *ngIf="!currentUser?.collegeLogo" class="college-logo-fallback">
+                <i class="fas fa-university"></i>
+            </div>
+        </div>
+        <div class="college-banner-info">
+            <div class="college-banner-name">{{ currentUser?.collegeName || 'My College' }}</div>
+            <div class="college-banner-address" *ngIf="currentUser?.collegeAddress">
+                <i class="fas fa-map-marker-alt"></i>
+                {{ currentUser?.collegeAddress }}
+            </div>
+        </div>
+    </div>
+
     <!-- Header Section -->
     <div class="header-section">
         <div>
-            <h1>System Overview</h1>
-            <p class="subtitle">Quick look at the key metrics and status of your bus management system.</p>
+            <h1 *ngIf="!isCollegeAdmin">System Overview</h1>
+            <h1 *ngIf="isCollegeAdmin">
+                <i class="fas fa-university" style="font-size:1.2rem;margin-right:0.5rem;opacity:0.7;"></i>
+                {{ currentUser?.name || 'College' }} Dashboard
+            </h1>
+            <p class="subtitle" *ngIf="!isCollegeAdmin">Quick look at the key metrics and status of your bus management
+                system.</p>
+            <p class="subtitle" *ngIf="isCollegeAdmin">Overview of your college's buses, drivers, routes and students.
+            </p>
         </div>
         <div class="header-actions">
             <div class="date-badge">
@@ -59,22 +85,45 @@
                 <h3>Quick Actions</h3>
             </div>
             <div class="actions-grid">
-                <a routerLink="/colleges" class="action-btn">
-                    <i class="fas fa-university"></i>
-                    <span>Add College</span>
-                </a>
-                <a routerLink="/routes" class="action-btn">
-                    <i class="fas fa-route"></i>
-                    <span>Create Route</span>
-                </a>
-                <a routerLink="/drivers" class="action-btn">
-                    <i class="fas fa-user-plus"></i>
-                    <span>Add Driver</span>
-                </a>
-                <a routerLink="/tracking" class="action-btn">
-                    <i class="fas fa-map-marked-alt"></i>
-                    <span>Live Map</span>
-                </a>
+                <!-- Super Admin quick actions -->
+                <ng-container *ngIf="!isCollegeAdmin">
+                    <a routerLink="/colleges/new" class="action-btn">
+                        <i class="fas fa-university"></i>
+                        <span>Add College</span>
+                    </a>
+                    <a routerLink="/routes/new" class="action-btn">
+                        <i class="fas fa-route"></i>
+                        <span>Create Route</span>
+                    </a>
+                    <a routerLink="/drivers/new" class="action-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Driver</span>
+                    </a>
+                    <a routerLink="/tracking" class="action-btn">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Live Map</span>
+                    </a>
+                </ng-container>
+
+                <!-- College Admin quick actions -->
+                <ng-container *ngIf="isCollegeAdmin">
+                    <a routerLink="/students/new" class="action-btn">
+                        <i class="fas fa-user-graduate"></i>
+                        <span>Add Student</span>
+                    </a>
+                    <a routerLink="/buses/new" class="action-btn">
+                        <i class="fas fa-bus"></i>
+                        <span>Add Bus</span>
+                    </a>
+                    <a routerLink="/drivers/new" class="action-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Driver</span>
+                    </a>
+                    <a routerLink="/tracking" class="action-btn">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>Live Map</span>
+                    </a>
+                </ng-container>
             </div>
         </div>
     </div>

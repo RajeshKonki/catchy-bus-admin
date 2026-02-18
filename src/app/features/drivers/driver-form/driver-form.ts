@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -14,6 +14,7 @@ export class DriverForm implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   driverForm: FormGroup;
   isEditMode = false;
@@ -42,6 +43,9 @@ export class DriverForm implements OnInit {
 
   filteredBuses: any[] = [];
 
+  // Password visibility toggle
+  showPassword = false;
+
   constructor() {
     this.driverForm = this.fb.group({
       name: ['', Validators.required],
@@ -50,7 +54,9 @@ export class DriverForm implements OnInit {
       licenseNumber: ['', Validators.required],
       collegeId: ['', Validators.required],
       busId: [''],
-      status: ['Active', Validators.required]
+      status: ['Active', Validators.required],
+      loginEmail: ['', [Validators.required, Validators.email]],
+      loginPassword: ['', Validators.required],
     });
 
     this.driverForm.get('collegeId')?.valueChanges.subscribe(collegeId => {
@@ -65,6 +71,10 @@ export class DriverForm implements OnInit {
 
     if (this.isEditMode) {
       this.loading = true;
+      // In edit mode, password is not required (leave blank to keep existing)
+      this.driverForm.get('loginPassword')?.clearValidators();
+      this.driverForm.get('loginPassword')?.updateValueAndValidity();
+
       setTimeout(() => {
         this.driverForm.patchValue({
           name: 'Rajesh Kumar',
@@ -73,11 +83,14 @@ export class DriverForm implements OnInit {
           licenseNumber: 'KA0120100012345',
           collegeId: '1',
           busId: '1',
-          status: 'Active'
+          status: 'Active',
+          loginEmail: 'rajesh.driver@bit.edu.in',
+          loginPassword: '',
         });
         this.filteredBuses = this.allBuses.filter(b => b.collegeId === '1');
         this.loading = false;
-      }, 500);
+        this.cdr.detectChanges();
+      }, 1000);
     }
   }
 

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-route-list',
@@ -15,6 +16,8 @@ export class RouteList implements OnInit {
   loading = true;
   error = '';
 
+  constructor(private cdr: ChangeDetectorRef, private confirmDialog: ConfirmDialogService) { }
+
   ngOnInit() {
     setTimeout(() => {
       this.routes = [
@@ -26,7 +29,20 @@ export class RouteList implements OnInit {
       ];
       this.filteredRoutes = [...this.routes];
       this.loading = false;
-    }, 600);
+      this.cdr.detectChanges();
+    }, 1000);
+  }
+
+  itemsPerPage = 5;
+  currentPage = 1;
+
+  get totalPages() {
+    return Math.ceil(this.filteredRoutes.length / this.itemsPerPage);
+  }
+
+  get paginatedRoutes() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredRoutes.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   onSearch(event: Event) {
@@ -36,12 +52,30 @@ export class RouteList implements OnInit {
       r.startPoint?.toLowerCase().includes(query) ||
       r.endPoint?.toLowerCase().includes(query)
     );
+    this.currentPage = 1; // Reset to first page on search
   }
 
-  deleteRoute(id: string) {
-    if (confirm('Are you sure you want to delete this route?')) {
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
+  }
+
+  async deleteRoute(id: string) {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Route',
+      message: 'Are you sure you want to delete this route? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.routes = this.routes.filter(r => r.id !== id);
       this.filteredRoutes = this.filteredRoutes.filter(r => r.id !== id);
+      if (this.currentPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = this.totalPages;
+      }
+      this.cdr.detectChanges();
     }
   }
 }

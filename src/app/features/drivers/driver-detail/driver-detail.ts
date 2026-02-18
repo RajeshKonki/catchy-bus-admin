@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-driver-detail',
@@ -12,6 +13,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 export class DriverDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private confirmDialog = inject(ConfirmDialogService);
 
   loading = true;
   error = '';
@@ -31,8 +33,14 @@ export class DriverDetail implements OnInit {
     }, 400);
   }
 
-  deleteDriver() {
-    if (confirm('Are you sure you want to delete this driver?')) {
+  async deleteDriver() {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Driver',
+      message: `Are you sure you want to delete driver "${this.driver?.name}"? This action cannot be undone.`,
+      confirmText: 'Delete',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.router.navigate(['/drivers']);
     }
   }

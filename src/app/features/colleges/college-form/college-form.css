@@ -1,5 +1,103 @@
 /* College Form — all shared form styles are in global styles.css */
 
+/* Address + Map Picker */
+.address-with-map {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+}
+
+.address-with-map textarea {
+    flex: 1;
+}
+
+.btn-pick-map {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    background: linear-gradient(135deg, #1a3a6b, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    font-family: inherit;
+    flex-shrink: 0;
+}
+
+.btn-pick-map:hover {
+    opacity: 0.88;
+}
+
+/* Coordinate Badges */
+.coords-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.coord-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.8rem;
+}
+
+.coord-badge i {
+    color: #16a34a;
+    font-size: 0.75rem;
+}
+
+.coord-label {
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.coord-value {
+    color: #111827;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.btn-clear-coords {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    border-radius: 6px;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.2s;
+}
+
+.btn-clear-coords:hover {
+    background: #fca5a5;
+}
+
+.coords-hint {
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+
 /* Image Upload Styles from admin-panel */
 .image-upload-container {
     position: relative;

@@ -1,16 +1,103 @@
 /* Using global styles from styles.css */
 
+.college-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.college-header-main {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
 .college-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    border: 1px solid #e2e8f0;
+    padding: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 15px;
+    flex-shrink: 0;
 }
 
 .logo-img {
-    transition: transform 0.2s;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
 }
 
-.logo-img:hover {
-    transform: scale(1.1);
+.header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.header-info h3 {
+    margin: 0 0 0.35rem 0;
+    font-size: 1.1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-content {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+}
+
+.info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.info-row i {
+    color: var(--deep-blue);
+    font-size: 1rem;
+    margin-top: 0.2rem;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.info-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.1rem;
+}
+
+.value {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.address-row .value {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.card-actions {
+    margin-top: auto;
 }

@@ -23,7 +23,8 @@
         </div>
 
         <form [formGroup]="routeForm" (ngSubmit)="onSubmit()">
-            <!-- Basic Info -->
+
+            <!-- Route Information -->
             <div class="form-section-title">
                 <i class="fas fa-info-circle"></i> Route Information
             </div>
@@ -34,27 +35,6 @@
                     placeholder="e.g. Bangalore North Route">
                 <div class="validation-error" *ngIf="routeForm.get('name')?.touched && routeForm.get('name')?.invalid">
                     Route name is required
-                </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col">
-                    <label for="startPoint">Start Point *</label>
-                    <input id="startPoint" type="text" formControlName="startPoint" class="form-control"
-                        placeholder="e.g. Majestic Bus Stand">
-                    <div class="validation-error"
-                        *ngIf="routeForm.get('startPoint')?.touched && routeForm.get('startPoint')?.invalid">
-                        Start point is required
-                    </div>
-                </div>
-                <div class="form-group col">
-                    <label for="endPoint">End Point *</label>
-                    <input id="endPoint" type="text" formControlName="endPoint" class="form-control"
-                        placeholder="e.g. Bangalore Institute of Technology">
-                    <div class="validation-error"
-                        *ngIf="routeForm.get('endPoint')?.touched && routeForm.get('endPoint')?.invalid">
-                        End point is required
-                    </div>
                 </div>
             </div>
 
@@ -73,27 +53,226 @@
                 </div>
             </div>
 
-            <!-- Stops -->
+            <!-- Route Points Timeline -->
             <div class="form-section-title">
-                <i class="fas fa-map-marker-alt"></i> Route Stops
+                <i class="fas fa-map-marker-alt"></i> Route Points
             </div>
 
-            <div class="form-group">
-                <label>Stops (in order)</label>
-                <div formArrayName="stops" class="stops-list">
-                    <div *ngFor="let stop of stopsArray.controls; let i = index" class="stop-row">
-                        <span class="stop-number">{{ i + 1 }}</span>
-                        <input [formControlName]="i" type="text" class="form-control"
-                            placeholder="Stop name, e.g. Shivajinagar">
-                        <button type="button" (click)="removeStop(i)" class="btn btn-danger btn-icon">
-                            <i class="fas fa-times"></i>
-                        </button>
+            <div class="route-points-timeline">
+
+                <!-- ── START POINT ── -->
+                <div class="route-point-item">
+                    <div class="route-point-connector-col">
+                        <div class="route-point-dot start-dot">
+                            <i class="fas fa-play"></i>
+                        </div>
+                        <div class="route-point-line"></div>
+                    </div>
+                    <div class="stop-card route-point-card">
+                        <div class="stop-card-top">
+                            <span class="stop-card-title start-title">
+                                <i class="fas fa-circle-dot"></i> Start Point
+                            </span>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="stop-field">
+                            <label class="stop-field-label">
+                                <i class="fas fa-tag"></i> Location Name *
+                            </label>
+                            <input formControlName="startName" type="text" class="form-control"
+                                placeholder="e.g. Majestic Bus Stand">
+                            <div class="validation-error"
+                                *ngIf="routeForm.get('startName')?.touched && routeForm.get('startName')?.invalid">
+                                Start point name is required
+                            </div>
+                        </div>
+
+                        <!-- Address + Map -->
+                        <div class="stop-field">
+                            <label class="stop-field-label">
+                                <i class="fas fa-map-marker-alt"></i> Address
+                            </label>
+                            <div class="point-with-map">
+                                <input formControlName="startAddress" type="text" class="form-control"
+                                    placeholder="Search or pick on map...">
+                                <button type="button" class="btn-pick-map" (click)="openMapPicker('start')">
+                                    <i class="fas fa-map-marker-alt"></i> Pick on Map
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Coordinates -->
+                        <div class="coords-display" *ngIf="startLat !== null && startLng !== null">
+                            <div class="coord-badge">
+                                <i class="fas fa-crosshairs"></i>
+                                <span class="coord-label">Lat</span>
+                                <span class="coord-value">{{ startLat?.toFixed(6) }}</span>
+                            </div>
+                            <div class="coord-badge">
+                                <i class="fas fa-crosshairs"></i>
+                                <span class="coord-label">Lng</span>
+                                <span class="coord-value">{{ startLng?.toFixed(6) }}</span>
+                            </div>
+                            <button type="button" class="btn-clear-coords" (click)="clearStart()" title="Clear">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="coords-hint" *ngIf="startLat === null">
+                            <i class="fas fa-info-circle"></i> Pick on map to set coordinates
+                        </div>
                     </div>
                 </div>
-                <button type="button" (click)="addStop()" class="btn btn-outline-primary add-stop-btn">
-                    <i class="fas fa-plus"></i> Add Stop
-                </button>
-            </div>
+
+                <!-- ── INTERMEDIATE STOPS ── -->
+                <div formArrayName="stops">
+                    <div *ngFor="let stop of stopsArray.controls; let i = index" class="route-point-item"
+                        [formGroupName]="i">
+
+                        <div class="route-point-connector-col">
+                            <div class="route-point-line top-line"></div>
+                            <div class="stop-dot-mid">{{ i + 1 }}</div>
+                            <div class="route-point-line"></div>
+                        </div>
+
+                        <div class="stop-card">
+                            <div class="stop-card-top">
+                                <span class="stop-card-title">
+                                    <i class="fas fa-circle-dot"></i> Stop {{ i + 1 }}
+                                </span>
+                                <button type="button" class="btn-remove-stop" (click)="removeStop(i)">
+                                    <i class="fas fa-trash-alt"></i> Remove
+                                </button>
+                            </div>
+
+                            <!-- Stop Name -->
+                            <div class="stop-field">
+                                <label class="stop-field-label">
+                                    <i class="fas fa-tag"></i> Stop Name
+                                </label>
+                                <input formControlName="name" type="text" class="form-control"
+                                    placeholder="e.g. Shivajinagar Bus Stop">
+                            </div>
+
+                            <!-- Address + Map -->
+                            <div class="stop-field">
+                                <label class="stop-field-label">
+                                    <i class="fas fa-map-marker-alt"></i> Address
+                                </label>
+                                <div class="point-with-map">
+                                    <input formControlName="address" type="text" class="form-control"
+                                        placeholder="Search or pick on map...">
+                                    <button type="button" class="btn-pick-map" (click)="openMapPicker(i.toString())">
+                                        <i class="fas fa-map-marker-alt"></i> Pick on Map
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Coordinates -->
+                            <div class="coords-display"
+                                *ngIf="stopCoords[i]?.lat !== null && stopCoords[i]?.lat !== undefined">
+                                <div class="coord-badge">
+                                    <i class="fas fa-crosshairs"></i>
+                                    <span class="coord-label">Lat</span>
+                                    <span class="coord-value">{{ stopCoords[i].lat?.toFixed(6) }}</span>
+                                </div>
+                                <div class="coord-badge">
+                                    <i class="fas fa-crosshairs"></i>
+                                    <span class="coord-label">Lng</span>
+                                    <span class="coord-value">{{ stopCoords[i].lng?.toFixed(6) }}</span>
+                                </div>
+                                <button type="button" class="btn-clear-coords" (click)="clearStopCoords(i)"
+                                    title="Clear coordinates">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div class="coords-hint" *ngIf="!stopCoords[i]?.lat">
+                                <i class="fas fa-info-circle"></i> Pick on map to set coordinates
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Stop button (inline in timeline) -->
+                <div class="add-stop-row">
+                    <div class="route-point-connector-col add-stop-connector">
+                        <div class="route-point-line short-line"></div>
+                        <div class="add-stop-dot">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="route-point-line short-line"></div>
+                    </div>
+                    <button type="button" (click)="addStop()" class="btn-add-stop">
+                        <i class="fas fa-plus-circle"></i> Add Intermediate Stop
+                    </button>
+                </div>
+
+                <!-- ── END POINT ── -->
+                <div class="route-point-item">
+                    <div class="route-point-connector-col">
+                        <div class="route-point-line"></div>
+                        <div class="route-point-dot end-dot">
+                            <i class="fas fa-flag-checkered"></i>
+                        </div>
+                    </div>
+                    <div class="stop-card route-point-card">
+                        <div class="stop-card-top">
+                            <span class="stop-card-title end-title">
+                                <i class="fas fa-circle-dot"></i> End Point
+                            </span>
+                        </div>
+
+                        <!-- Name -->
+                        <div class="stop-field">
+                            <label class="stop-field-label">
+                                <i class="fas fa-tag"></i> Location Name *
+                            </label>
+                            <input formControlName="endName" type="text" class="form-control"
+                                placeholder="e.g. Bangalore Institute of Technology">
+                            <div class="validation-error"
+                                *ngIf="routeForm.get('endName')?.touched && routeForm.get('endName')?.invalid">
+                                End point name is required
+                            </div>
+                        </div>
+
+                        <!-- Address + Map -->
+                        <div class="stop-field">
+                            <label class="stop-field-label">
+                                <i class="fas fa-map-marker-alt"></i> Address
+                            </label>
+                            <div class="point-with-map">
+                                <input formControlName="endAddress" type="text" class="form-control"
+                                    placeholder="Search or pick on map...">
+                                <button type="button" class="btn-pick-map" (click)="openMapPicker('end')">
+                                    <i class="fas fa-map-marker-alt"></i> Pick on Map
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Coordinates -->
+                        <div class="coords-display" *ngIf="endLat !== null && endLng !== null">
+                            <div class="coord-badge">
+                                <i class="fas fa-crosshairs"></i>
+                                <span class="coord-label">Lat</span>
+                                <span class="coord-value">{{ endLat?.toFixed(6) }}</span>
+                            </div>
+                            <div class="coord-badge">
+                                <i class="fas fa-crosshairs"></i>
+                                <span class="coord-label">Lng</span>
+                                <span class="coord-value">{{ endLng?.toFixed(6) }}</span>
+                            </div>
+                            <button type="button" class="btn-clear-coords" (click)="clearEnd()" title="Clear">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="coords-hint" *ngIf="endLat === null">
+                            <i class="fas fa-info-circle"></i> Pick on map to set coordinates
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /route-points-timeline -->
+
         </form>
     </div>
 
@@ -106,3 +285,8 @@
         </button>
     </div>
 </div>
+
+<!-- Shared Map Picker Modal -->
+<app-map-picker *ngIf="showMapPicker" [initialLat]="pickerInitialLat" [initialLng]="pickerInitialLng"
+    (locationSelected)="onLocationSelected($event)" (closed)="onMapPickerClosed()">
+</app-map-picker>

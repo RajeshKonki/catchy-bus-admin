@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-driver-list',
@@ -15,6 +16,8 @@ export class DriverList implements OnInit {
   error = '';
   searchTerm = '';
 
+  constructor(private cdr: ChangeDetectorRef, private confirmDialog: ConfirmDialogService) { }
+
   ngOnInit() {
     setTimeout(() => {
       this.drivers = [
@@ -26,11 +29,31 @@ export class DriverList implements OnInit {
         { id: '6', name: 'Arun Sharma', status: 'Active', isOnline: false, licenseNumber: 'KA0120150067890', phone: '+91 9876543215', collegeName: 'BMS College of Engineering', busNumber: 'KA-01-H-2222' },
       ];
       this.loading = false;
-    }, 600);
+      this.cdr.detectChanges();
+    }, 1000);
+  }
+
+  itemsPerPage = 5;
+  currentPage = 1;
+
+  get totalPages() {
+    return Math.ceil(this.filteredDrivers.length / this.itemsPerPage);
+  }
+
+  get paginatedDrivers() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredDrivers.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   onSearch(event: Event) {
     this.searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    this.currentPage = 1; // Reset to first page on search
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
   }
 
   get filteredDrivers() {
@@ -43,9 +66,20 @@ export class DriverList implements OnInit {
     );
   }
 
-  deleteDriver(id: string) {
-    if (confirm('Are you sure you want to delete this driver?')) {
+  async deleteDriver(id: string) {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Driver',
+      message: 'Are you sure you want to delete this driver? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.drivers = this.drivers.filter(d => d.id !== id);
+      if (this.currentPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = this.totalPages;
+      }
+      this.cdr.detectChanges();
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -14,6 +14,7 @@ export class StudentForm implements OnInit {
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private cdr = inject(ChangeDetectorRef);
 
   studentForm: FormGroup;
   isEditMode = false;
@@ -75,7 +76,8 @@ export class StudentForm implements OnInit {
           status: 'Active',
         });
         this.filteredBuses = this.allBuses.filter(b => b.collegeId === '1');
-      }, 500);
+        this.cdr.detectChanges();
+      }, 1000);
     }
   }
 

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-bus-list',
@@ -15,6 +16,8 @@ export class BusList implements OnInit {
   error = '';
   searchTerm = '';
 
+  constructor(private cdr: ChangeDetectorRef, private confirmDialog: ConfirmDialogService) { }
+
   ngOnInit() {
     setTimeout(() => {
       this.buses = [
@@ -26,11 +29,31 @@ export class BusList implements OnInit {
         { id: '6', busNumber: 'KA-01-H-2222', title: 'Morning Route F', status: 'Active', routeName: 'Hebbal → BMSCE', collegeName: 'BMS College of Engineering', capacity: 44 },
       ];
       this.loading = false;
-    }, 600);
+      this.cdr.detectChanges();
+    }, 1000);
+  }
+
+  itemsPerPage = 5;
+  currentPage = 1;
+
+  get totalPages() {
+    return Math.ceil(this.filteredBuses.length / this.itemsPerPage);
+  }
+
+  get paginatedBuses() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredBuses.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
   onSearch(event: Event) {
     this.searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    this.currentPage = 1; // Reset to first page on search
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+    }
   }
 
   get filteredBuses() {
@@ -43,9 +66,20 @@ export class BusList implements OnInit {
     );
   }
 
-  deleteBus(id: string) {
-    if (confirm('Are you sure you want to delete this bus?')) {
+  async deleteBus(id: string) {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Bus',
+      message: 'Are you sure you want to delete this bus? This action cannot be undone.',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.buses = this.buses.filter(b => b.id !== id);
+      if (this.currentPage > this.totalPages && this.totalPages > 0) {
+        this.currentPage = this.totalPages;
+      }
+      this.cdr.detectChanges();
     }
   }
 }

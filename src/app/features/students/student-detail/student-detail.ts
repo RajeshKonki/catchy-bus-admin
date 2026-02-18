@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-student-detail',
@@ -12,6 +13,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 export class StudentDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private confirmDialog = inject(ConfirmDialogService);
 
   loading = true;
   error = '';
@@ -31,8 +33,14 @@ export class StudentDetail implements OnInit {
     }, 400);
   }
 
-  deleteStudent() {
-    if (confirm('Are you sure you want to delete this student?')) {
+  async deleteStudent() {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Student',
+      message: `Are you sure you want to delete student "${this.student?.name}"? This action cannot be undone.`,
+      confirmText: 'Delete',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.router.navigate(['/students']);
     }
   }

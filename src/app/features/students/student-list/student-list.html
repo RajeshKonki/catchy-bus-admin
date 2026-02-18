@@ -23,36 +23,67 @@
 </div>
 
 <!-- Student Cards Grid -->
-<div *ngIf="!loading && !error" class="card-grid">
-    <div *ngFor="let student of filteredStudents" class="card">
-        <div class="card-header">
-            <div class="header-content">
-                <h3>{{ student.name }}</h3>
-                <div class="badges">
+<!-- Student List Table -->
+<div *ngIf="!loading && !error && filteredStudents.length > 0" class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Name / Email</th>
+                <th>Status</th>
+                <th>College</th>
+                <th>Bus Info</th>
+                <th>Pickup Stop</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let student of paginatedStudents">
+                <td>
+                    <strong>{{ student.name }}</strong><br>
+                    <small class="text-muted">{{ student.email || 'No Email' }}</small>
+                </td>
+                <td>
                     <span class="status-badge" [ngClass]="student.status?.toLowerCase() || 'active'">
                         {{ student.status || 'Active' }}
                     </span>
-                </div>
-            </div>
-        </div>
-        <div class="card-content">
-            <p><i class="fas fa-phone"></i> {{ student.phone }}</p>
-            <p><i class="fas fa-envelope"></i> {{ student.email || 'N/A' }}</p>
-            <p><i class="fas fa-university"></i> {{ student.collegeName || 'N/A' }}</p>
-            <p><i class="fas fa-bus"></i> {{ student.busNumber || 'No Bus Assigned' }}</p>
-            <p><i class="fas fa-map-marker-alt"></i> {{ student.pickupStop || 'N/A' }}</p>
-        </div>
-        <div class="card-actions">
-            <a [routerLink]="['/students', student.id]" class="btn btn-outline-primary">
-                <i class="fas fa-eye"></i> View
-            </a>
-            <a [routerLink]="['/students', student.id, 'edit']" class="btn btn-secondary">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            <button (click)="deleteStudent(student.id)" class="btn btn-danger">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
+                </td>
+                <td>{{ student.collegeName || 'N/A' }}</td>
+                <td>
+                    <div *ngIf="student.busNumber">
+                        <i class="fas fa-bus text-muted"></i> {{ student.busNumber }}
+                    </div>
+                    <span *ngIf="!student.busNumber" class="text-muted">No Bus</span>
+                </td>
+                <td>{{ student.pickupStop || 'N/A' }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <a [routerLink]="['/students', student.id]" class="btn-icon" title="View">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a [routerLink]="['/students', student.id, 'edit']" class="btn-icon" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button (click)="deleteStudent(student.id)" class="btn-icon text-red" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="btn btn-secondary btn-sm">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span class="page-info">
+            Page {{ currentPage }} of {{ totalPages }}
+        </span>
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages"
+            class="btn btn-secondary btn-sm">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
 </div>
 

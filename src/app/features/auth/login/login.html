@@ -5,10 +5,34 @@
         <p>Admin Portal - Secure Access</p>
     </div>
 
+    <!-- Role Tab Switcher -->
+    <div class="role-tabs">
+        <button type="button" class="role-tab" [class.active]="activeRole === 'superadmin'"
+            (click)="selectRole('superadmin')">
+            <i class="fas fa-shield-alt"></i>
+            <span>Super Admin</span>
+        </button>
+        <button type="button" class="role-tab" [class.active]="activeRole === 'college'"
+            (click)="selectRole('college')">
+            <i class="fas fa-university"></i>
+            <span>College Panel</span>
+        </button>
+    </div>
+
+    <!-- Role context hint -->
+    <div class="role-hint" [class.college]="activeRole === 'college'">
+        <i class="fas" [class.fa-user-shield]="activeRole === 'superadmin'"
+            [class.fa-building]="activeRole === 'college'"></i>
+        <span *ngIf="activeRole === 'superadmin'">Sign in with your Super Admin credentials to manage all colleges,
+            routes and buses.</span>
+        <span *ngIf="activeRole === 'college'">Sign in with your college login credentials to access your college
+            panel.</span>
+    </div>
+
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
             <label for="email">EMAIL ADDRESS</label>
-            <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email"
+            <input id="email" type="email" formControlName="email" class="form-control" [placeholder]="emailPlaceholder"
                 [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
             <div class="invalid-feedback" *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
                 Please enter a valid email address
@@ -35,8 +59,9 @@
             <i class="fas fa-exclamation-circle"></i> {{ error }}
         </div>
 
-        <button type="submit" class="btn btn-primary btn-block" [disabled]="loginForm.invalid || loading">
-            <span *ngIf="!loading">Sign In to Dashboard <i class="fas fa-arrow-right"></i></span>
+        <button type="submit" class="btn btn-primary btn-block" [class.college-btn]="activeRole === 'college'"
+            [disabled]="loginForm.invalid || loading">
+            <span *ngIf="!loading">{{ submitLabel }} <i class="fas fa-arrow-right"></i></span>
             <span *ngIf="loading"><i class="fas fa-spinner fa-spin"></i> Signing In...</span>
         </button>
     </form>

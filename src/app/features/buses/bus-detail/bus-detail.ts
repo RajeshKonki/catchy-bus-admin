@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ConfirmDialogService } from '../../../shared/services/confirm-dialog.service';
 
 @Component({
   selector: 'app-bus-detail',
@@ -12,6 +13,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 export class BusDetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private confirmDialog = inject(ConfirmDialogService);
 
   loading = true;
   error = '';
@@ -31,8 +33,14 @@ export class BusDetail implements OnInit {
     }, 400);
   }
 
-  deleteBus() {
-    if (confirm('Are you sure you want to delete this bus?')) {
+  async deleteBus() {
+    const confirmed = await this.confirmDialog.confirm({
+      title: 'Delete Bus',
+      message: `Are you sure you want to delete bus "${this.bus?.busNumber}"? This action cannot be undone.`,
+      confirmText: 'Delete',
+      type: 'danger'
+    });
+    if (confirmed) {
       this.router.navigate(['/buses']);
     }
   }

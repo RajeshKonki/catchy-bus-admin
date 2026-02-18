@@ -23,38 +23,72 @@
 </div>
 
 <!-- Driver Cards Grid -->
-<div *ngIf="!loading && !error" class="card-grid">
-    <div *ngFor="let driver of filteredDrivers" class="card">
-        <div class="card-header">
-            <div class="header-content">
-                <h3>{{ driver.name }}</h3>
-                <div class="badges">
-                    <span class="status-badge" [ngClass]="driver.status?.toLowerCase()">
-                        {{ driver.status }}
+<!-- Driver List Table -->
+<div *ngIf="!loading && !error && filteredDrivers.length > 0" class="table-container">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Name / License</th>
+                <th>Status</th>
+                <th>Phone</th>
+                <th>College</th>
+                <th>Assigned Bus</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let driver of paginatedDrivers">
+                <td>
+                    <strong>{{ driver.name }}</strong><br>
+                    <small class="text-muted">{{ driver.licenseNumber }}</small>
+                </td>
+                <td>
+                    <div class="badges">
+                        <span class="status-badge" [ngClass]="driver.status?.toLowerCase()">
+                            {{ driver.status }}
+                        </span>
+                        <span class="status-badge" [ngClass]="driver.isOnline ? 'online' : 'offline'">
+                            {{ driver.isOnline ? 'Online' : 'Offline' }}
+                        </span>
+                    </div>
+                </td>
+                <td>{{ driver.phone }}</td>
+                <td>{{ driver.collegeName || 'N/A' }}</td>
+                <td>
+                    <span *ngIf="driver.busNumber">
+                        <i class="fas fa-bus text-muted"></i> {{ driver.busNumber }}
                     </span>
-                    <span class="status-badge" [ngClass]="driver.isOnline ? 'online' : 'offline'">
-                        {{ driver.isOnline ? 'Online' : 'Offline' }}
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div class="card-content">
-            <p><i class="fas fa-id-card"></i> {{ driver.licenseNumber }}</p>
-            <p><i class="fas fa-phone"></i> {{ driver.phone }}</p>
-            <p><i class="fas fa-university"></i> {{ driver.collegeName || 'N/A' }}</p>
-            <p><i class="fas fa-bus"></i> {{ driver.busNumber || 'No Bus Assigned' }}</p>
-        </div>
-        <div class="card-actions">
-            <a [routerLink]="['/drivers', driver.id]" class="btn btn-outline-primary">
-                <i class="fas fa-eye"></i> View
-            </a>
-            <a [routerLink]="['/drivers', driver.id, 'edit']" class="btn btn-secondary">
-                <i class="fas fa-edit"></i> Edit
-            </a>
-            <button (click)="deleteDriver(driver.id)" class="btn btn-danger">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
+                    <span *ngIf="!driver.busNumber" class="text-muted">No Bus</span>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <a [routerLink]="['/drivers', driver.id]" class="btn-icon" title="View">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a [routerLink]="['/drivers', driver.id, 'edit']" class="btn-icon" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button (click)="deleteDriver(driver.id)" class="btn-icon text-red" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-controls">
+        <button (click)="changePage(currentPage - 1)" [disabled]="currentPage === 1" class="btn btn-secondary btn-sm">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span class="page-info">
+            Page {{ currentPage }} of {{ totalPages }}
+        </span>
+        <button (click)="changePage(currentPage + 1)" [disabled]="currentPage === totalPages"
+            class="btn btn-secondary btn-sm">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
     </div>
 </div>
 

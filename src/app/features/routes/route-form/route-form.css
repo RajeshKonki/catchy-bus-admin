@@ -1,1 +1,293 @@
 /* Route Form — all shared form styles are in global styles.css */
+
+/* ── Point fields (start / end) ── */
+.point-with-map {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.point-with-map input {
+    flex: 1;
+}
+
+.btn-pick-map {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    background: linear-gradient(135deg, #1a3a6b, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.2s;
+    font-family: inherit;
+    flex-shrink: 0;
+}
+
+.btn-pick-map:hover { opacity: 0.88; }
+
+/* ── Coordinate badges ── */
+.coords-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.coord-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    padding: 0.28rem 0.6rem;
+    font-size: 0.78rem;
+}
+
+.coord-badge i { color: #16a34a; font-size: 0.72rem; }
+.coord-label   { color: #6b7280; font-weight: 500; }
+.coord-value   { color: #111827; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.btn-clear-coords {
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    border-radius: 6px;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 0.72rem;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-clear-coords:hover { background: #fca5a5; }
+
+.coords-hint {
+    margin-top: 0.35rem;
+    font-size: 0.76rem;
+    color: #9ca3af;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* ── Unified Route Points Timeline ── */
+.route-points-timeline {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+}
+
+.route-point-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+}
+
+/* Left connector column */
+.route-point-connector-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+    flex-shrink: 0;
+    padding-top: 0.9rem;
+}
+
+/* Connector lines */
+.route-point-line {
+    width: 2px;
+    flex: 1;
+    min-height: 16px;
+    background: linear-gradient(to bottom, #2563eb44, #2563eb11);
+}
+
+.short-line { min-height: 10px; flex: none; height: 14px; }
+.top-line   { margin-bottom: 0; }
+
+/* Start dot — green */
+.route-point-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+.start-dot {
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+}
+
+/* End dot — red */
+.end-dot {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+}
+
+/* Intermediate stop dot — blue numbered */
+.stop-dot-mid {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #1a3a6b, #2563eb);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35);
+    z-index: 1;
+}
+
+/* Add stop inline row */
+.add-stop-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+}
+
+.add-stop-connector {
+    padding-top: 0;
+    justify-content: center;
+}
+
+.add-stop-dot {
+    width: 24px; height: 24px;
+    border: 2px dashed #2563eb;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #2563eb;
+    font-size: 0.65rem;
+    flex-shrink: 0;
+    background: #eff6ff;
+}
+
+
+
+/* Right column: card */
+.stop-card {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    margin-left: 0.75rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: box-shadow 0.2s;
+}
+
+.stop-card:hover {
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+    border-color: #bfdbfe;
+}
+
+/* Start / End point card accents */
+.route-point-card.stop-card:has(.start-title) {
+    border-left: 3px solid #10b981;
+    background: #f0fdf4;
+}
+
+.route-point-card.stop-card:has(.end-title) {
+    border-left: 3px solid #ef4444;
+    background: #fff5f5;
+}
+
+.start-title { color: #059669 !important; }
+.end-title   { color: #dc2626 !important; }
+
+
+.stop-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stop-card-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #1e40af;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.stop-card-title i { font-size: 0.75rem; }
+
+.btn-remove-stop {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    border-radius: 6px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-family: inherit;
+}
+
+.btn-remove-stop:hover { background: #fca5a5; }
+
+/* Stop field rows (name / address) */
+.stop-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.stop-field-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.stop-field-label i { color: #2563eb; font-size: 0.72rem; }
+
+/* ── Add stop button ── */
+.btn-add-stop {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: transparent;
+    border: 2px dashed #2563eb;
+    border-radius: 10px;
+    color: #2563eb;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin-top: 0.25rem;
+}
+
+.btn-add-stop:hover {
+    background: #eff6ff;
+    border-style: solid;
+}
+
+
+
+
+
