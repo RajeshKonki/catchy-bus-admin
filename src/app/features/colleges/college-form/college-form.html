@@ -1,0 +1,127 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1>{{ isEditMode ? 'Edit College' : 'Add New College' }}</h1>
+    <a routerLink="/colleges" class="btn btn-ghost">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+</div>
+
+<!-- Form Container -->
+<div class="form-container" *ngIf="!loading">
+    <div class="form-container-header">
+        <i class="fas fa-university"></i>
+        <h2>{{ isEditMode ? 'Update College Details' : 'Register New College' }}</h2>
+    </div>
+
+    <div class="form-body">
+        <div *ngIf="error" class="error-alert">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+
+        <form [formGroup]="collegeForm" (ngSubmit)="onSubmit()">
+            <!-- Basic Info -->
+            <div class="form-section-title">
+                <i class="fas fa-info-circle"></i> College Information
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-8">
+                    <label for="name">College Name *</label>
+                    <input id="name" type="text" formControlName="name" class="form-control"
+                        placeholder="e.g. Bangalore Institute of Technology">
+                    <div class="validation-error"
+                        *ngIf="collegeForm.get('name')?.touched && collegeForm.get('name')?.invalid">
+                        Name is required
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4">
+                    <label>College Logo/Photo</label>
+                    <div class="image-upload-container">
+                        <input type="file" id="college-image" accept="image/*" (change)="onFileSelected($event)"
+                            *ngIf="!previewUrl">
+
+                        <div class="upload-placeholder" *ngIf="!previewUrl">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Click to upload logo</p>
+                        </div>
+
+                        <div class="image-preview" *ngIf="previewUrl">
+                            <img [src]="previewUrl" alt="College preview">
+                            <button type="button" class="remove-image-btn" (click)="removeImage()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address *</label>
+                <textarea id="address" formControlName="address" class="form-control" rows="3"
+                    placeholder="e.g. K.R. Road, V.V. Puram, Bangalore"></textarea>
+                <div class="validation-error"
+                    *ngIf="collegeForm.get('address')?.touched && collegeForm.get('address')?.invalid">
+                    Address is required
+                </div>
+            </div>
+
+            <!-- Contact Detils -->
+            <div class="form-section-title">
+                <i class="fas fa-address-card"></i> Contact Details
+            </div>
+
+            <div class="form-group">
+                <label for="contactPerson">Contact Person *</label>
+                <input id="contactPerson" type="text" formControlName="contactPerson" class="form-control"
+                    placeholder="e.g. Dr. Suresh Kumar">
+                <div class="validation-error"
+                    *ngIf="collegeForm.get('contactPerson')?.touched && collegeForm.get('contactPerson')?.invalid">
+                    Contact person is required
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input id="email" type="email" formControlName="email" class="form-control"
+                        placeholder="e.g. support@bit.edu.in">
+                    <div class="validation-error"
+                        *ngIf="collegeForm.get('email')?.touched && collegeForm.get('email')?.invalid">
+                        Valid email is required
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone *</label>
+                    <input id="phone" type="tel" formControlName="phone" class="form-control"
+                        placeholder="e.g. 9876543210">
+                    <div class="validation-error"
+                        *ngIf="collegeForm.get('phone')?.touched && collegeForm.get('phone')?.invalid">
+                        Phone is required
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status *</label>
+                <select id="status" formControlName="status" class="form-control">
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-actions">
+        <a routerLink="/colleges" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary" [disabled]="collegeForm.invalid || submitting">
+            <i class="fas fa-spinner fa-spin" *ngIf="submitting"></i>
+            <i class="fas fa-save" *ngIf="!submitting"></i>
+            {{ submitting ? 'Saving...' : (isEditMode ? 'Update College' : 'Create College') }}
+        </button>
+    </div>
+</div>

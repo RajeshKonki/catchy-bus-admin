@@ -1,0 +1,26 @@
+/* Route specific styles */
+
+.route-stops-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.stop-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--deep-blue-lt);
+  color: var(--deep-blue);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.stop-arrow {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}

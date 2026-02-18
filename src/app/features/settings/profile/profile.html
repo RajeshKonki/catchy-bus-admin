@@ -1,0 +1,78 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1>My Profile</h1>
+</div>
+
+<!-- Profile Layout -->
+<div class="settings-layout">
+    <!-- Profile Card -->
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <i class="fas fa-user-circle"></i>
+            <h3>Profile Information</h3>
+        </div>
+
+        <div class="profile-avatar-section">
+            <div class="avatar-circle">
+                <i class="fas fa-user"></i>
+            </div>
+            <div>
+                <div class="avatar-name">Admin User</div>
+                <div class="avatar-role">Administrator</div>
+            </div>
+        </div>
+
+        <div *ngIf="error" class="error-alert">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        <div *ngIf="success" class="success-alert">
+            <i class="fas fa-check-circle"></i> {{ success }}
+        </div>
+
+        <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="displayName">Display Name</label>
+                <input id="displayName" type="text" formControlName="displayName" class="form-control"
+                    placeholder="Your name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input id="email" type="email" formControlName="email" class="form-control"
+                    placeholder="admin@example.com">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input id="phone" type="tel" formControlName="phone" class="form-control" placeholder="e.g. 9876543210">
+            </div>
+
+            <div class="form-actions" style="margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid || submitting">
+                    <i class="fas fa-spinner fa-spin" *ngIf="submitting"></i>
+                    <i class="fas fa-save" *ngIf="!submitting"></i>
+                    {{ submitting ? 'Saving...' : 'Save Changes' }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="settings-card">
+        <div class="settings-card-header">
+            <i class="fas fa-cog"></i>
+            <h3>Account Settings</h3>
+        </div>
+
+        <div class="settings-link-list">
+            <a routerLink="/settings/change-password" class="settings-link-item">
+                <div class="settings-link-icon" style="background:var(--deep-blue-lt);color:var(--deep-blue);">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div>
+                    <div style="font-weight:600;font-size:0.9rem;">Change Password</div>
+                    <div style="font-size:0.78rem;color:var(--text-muted);">Update your account password</div>
+                </div>
+                <i class="fas fa-chevron-right" style="margin-left:auto;color:var(--text-muted);font-size:0.8rem;"></i>
+            </a>
+        </div>
+    </div>
+</div>

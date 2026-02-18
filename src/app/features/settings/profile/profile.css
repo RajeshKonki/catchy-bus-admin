@@ -1,0 +1,209 @@
+/* ── Settings Pages ──────────────────────────────────────── */
+
+.settings-container {
+  max-width: 720px;
+  margin: 0 auto;
+  animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.settings-header {
+  margin-bottom: 1.75rem;
+}
+
+.settings-header h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin-bottom: 0.3rem;
+}
+
+.settings-header p {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* ── Settings Card ───────────────────────────────────────── */
+.settings-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.settings-card-header {
+  padding: 1.1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-subtle);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.settings-card-header i {
+  color: var(--deep-blue);
+  font-size: 1rem;
+}
+
+.settings-card-header h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.settings-card-body {
+  padding: 1.5rem;
+}
+
+/* ── Profile Avatar ──────────────────────────────────────── */
+.profile-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar-large {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--deep-blue), #2563eb);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(30, 79, 163, 0.3);
+}
+
+.profile-avatar-info h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.profile-avatar-info p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* ── Form Fields ─────────────────────────────────────────── */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.form-group.col {
+  flex: 1;
+  min-width: 180px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: var(--transition-fast);
+  background-color: var(--bg-subtle);
+  color: var(--text-primary);
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--deep-blue);
+  background-color: var(--white);
+  box-shadow: 0 0 0 3px rgba(30, 79, 163, 0.12);
+}
+
+.form-control::placeholder { color: var(--text-muted); }
+
+/* ── Form Actions ────────────────────────────────────────── */
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  margin-top: 1.5rem;
+}
+
+/* ── Success Alert ───────────────────────────────────────── */
+.success-alert {
+  background: var(--green-lt);
+  color: var(--green-dk);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+/* ── Error Alert ─────────────────────────────────────────── */
+.error-alert {
+  background: var(--location-red-lt);
+  color: var(--location-red-dk);
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(229, 57, 53, 0.2);
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+/* ── Password Strength ───────────────────────────────────── */
+.password-strength {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.strength-bar {
+  height: 3px;
+  flex: 1;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  transition: var(--transition-fast);
+}
+
+.strength-bar.filled.weak   { background: var(--location-red); }
+.strength-bar.filled.medium { background: var(--bright-orange); }
+.strength-bar.filled.strong { background: var(--green); }

@@ -1,0 +1,90 @@
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading student details...
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+</div>
+
+<!-- Detail Card -->
+<div *ngIf="!loading && !error && student" class="detail-card">
+    <!-- Hero Banner -->
+    <div class="detail-hero">
+        <div class="detail-avatar">
+            <i class="fas fa-user-graduate"></i>
+        </div>
+        <div class="detail-hero-info">
+            <h2>{{ student.name }}</h2>
+            <div class="meta">
+                <span class="status-badge" [ngClass]="student.status?.toLowerCase() || 'active'">
+                    {{ student.status || 'Active' }}
+                </span>
+                <span style="color:rgba(255,255,255,0.6);font-size:0.85rem;">
+                    <i class="fas fa-university" style="margin-right:0.35rem;"></i>{{ student.collegeName || 'N/A' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Body -->
+    <div class="detail-body">
+        <!-- Contact Info -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-address-card"></i> Contact Information
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">Phone</span>
+                    <span class="field-value">{{ student.phone }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Email</span>
+                    <span class="field-value">{{ student.email || '—' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bus Assignment -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-bus"></i> Bus Assignment
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">College</span>
+                    <span class="field-value">{{ student.collegeName || '—' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Bus Number</span>
+                    <span class="field-value">{{ student.busNumber || 'Not Assigned' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Pickup Stop</span>
+                    <span class="field-value">{{ student.pickupStop || '—' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Status</span>
+                    <span class="field-value">{{ student.status || 'Active' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="detail-actions">
+        <a routerLink="/students" class="btn btn-ghost">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <a [routerLink]="['/students', student.id, 'edit']" class="btn btn-secondary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <button (click)="deleteStudent()" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+</div>

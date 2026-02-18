@@ -1,0 +1,115 @@
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading college details...
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+</div>
+
+<!-- Detail Card -->
+<div *ngIf="!loading && !error && college" class="detail-card">
+    <!-- Hero Banner -->
+    <div class="detail-hero">
+        <div class="detail-avatar" [style.background]="college.logo ? 'white' : ''">
+            <img *ngIf="college.logo" [src]="college.logo" alt="{{ college.name }}"
+                style="width: 100%; height: 100%; object-fit: contain; padding: 5px;"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <i class="fas fa-university" [style.display]="college.logo ? 'none' : 'block'"></i>
+        </div>
+        <div class="detail-hero-info">
+            <h2>{{ college.name }}</h2>
+            <div class="meta">
+                <span class="status-badge" [ngClass]="college.status?.toLowerCase() || 'active'">
+                    {{ college.status || 'Active' }}
+                </span>
+                <span style="color:rgba(255,255,255,0.6);font-size:0.85rem;">
+                    <i class="fas fa-user-circle" style="margin-right:0.35rem;"></i>{{ college.contactPerson }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Body -->
+    <div class="detail-body">
+        <!-- Contact Info -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-address-card"></i> Contact Information
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">Contact Person</span>
+                    <span class="field-value">{{ college.contactPerson }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Email</span>
+                    <span class="field-value">{{ college.email }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Phone</span>
+                    <span class="field-value">{{ college.phone }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Status</span>
+                    <span class="field-value">{{ college.status || 'Active' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-map-marker-alt"></i> Address
+            </div>
+            <p style="color:var(--text-secondary);line-height:1.6;">{{ college.address }}</p>
+            <div class="detail-grid" *ngIf="college.latitude && college.longitude">
+                <div class="detail-field">
+                    <span class="field-label">Latitude</span>
+                    <span class="field-value">{{ college.latitude }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Longitude</span>
+                    <span class="field-value">{{ college.longitude }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-chart-bar"></i> Statistics
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">Total Buses</span>
+                    <span class="field-value">{{ college.busCount || 0 }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Total Drivers</span>
+                    <span class="field-value">{{ college.driverCount || 0 }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Total Students</span>
+                    <span class="field-value">{{ college.studentCount || 0 }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="detail-actions">
+        <a routerLink="/colleges" class="btn btn-ghost">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <a [routerLink]="['/colleges', college.id, 'edit']" class="btn btn-secondary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <button (click)="deleteCollege()" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Routes</h1>
+    <input type="text" placeholder="Search routes by name, start, end point..." (input)="onSearch($event)"
+        class="search-input">
+    <div class="actions">
+        <a routerLink="/routes/new" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Route
+        </a>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading routes...
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+</div>
+
+<!-- Route Cards Grid -->
+<div *ngIf="!loading && !error" class="card-grid">
+    <div *ngFor="let route of filteredRoutes" class="card">
+        <div class="card-header">
+            <div class="header-content">
+                <h3>{{ route.name }}</h3>
+                <span class="status-badge" [ngClass]="route.status?.toLowerCase() || 'active'">
+                    {{ route.status || 'Active' }}
+                </span>
+            </div>
+        </div>
+        <div class="card-content">
+            <p><i class="fas fa-map-pin"></i> <strong>From:</strong> {{ route.startPoint }}</p>
+            <p><i class="fas fa-flag-checkered"></i> <strong>To:</strong> {{ route.endPoint }}</p>
+            <p><i class="fas fa-map-marker-alt"></i> {{ route.stops?.length || 0 }} stops</p>
+            <p *ngIf="route.distance"><i class="fas fa-road"></i> {{ route.distance }} km</p>
+            <!-- Stops preview chips -->
+            <div class="route-stops-preview" *ngIf="route.stops?.length">
+                <ng-container *ngFor="let stop of route.stops; let i = index; let last = last">
+                    <span class="stop-chip">
+                        <i class="fas fa-circle" style="font-size:0.5rem;"></i> {{ stop.name || stop }}
+                    </span>
+                    <span class="stop-arrow" *ngIf="!last">›</span>
+                </ng-container>
+            </div>
+        </div>
+        <div class="card-actions">
+            <a [routerLink]="['/routes', route.id, 'map']" class="btn btn-outline-primary">
+                <i class="fas fa-map"></i> Map
+            </a>
+            <a [routerLink]="['/routes', route.id, 'edit']" class="btn btn-secondary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <button (click)="deleteRoute(route.id)" class="btn btn-danger">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Empty State -->
+<div *ngIf="!loading && !error && filteredRoutes.length === 0" class="empty-state">
+    <i class="fas fa-route"></i>
+    <strong>No routes found</strong>
+    <span>Try adjusting your search or create a new route.</span>
+</div>

@@ -1,0 +1,100 @@
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading driver details...
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+</div>
+
+<!-- Detail Card -->
+<div *ngIf="!loading && !error && driver" class="detail-card">
+    <!-- Hero Banner -->
+    <div class="detail-hero">
+        <div class="detail-avatar">
+            <i class="fas fa-user-tie"></i>
+        </div>
+        <div class="detail-hero-info">
+            <h2>{{ driver.name }}</h2>
+            <div class="meta">
+                <span class="status-badge" [ngClass]="driver.status?.toLowerCase()">{{ driver.status }}</span>
+                <span class="status-badge" [ngClass]="driver.isOnline ? 'online' : 'offline'"
+                    style="margin-left:0.25rem;">
+                    {{ driver.isOnline ? 'Online' : 'Offline' }}
+                </span>
+                <span style="color:rgba(255,255,255,0.6);font-size:0.85rem;">
+                    <i class="fas fa-university" style="margin-right:0.35rem;"></i>{{ driver.collegeName || 'N/A' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Body -->
+    <div class="detail-body">
+        <!-- Personal Info -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-user"></i> Personal Information
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">Full Name</span>
+                    <span class="field-value">{{ driver.name }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Phone</span>
+                    <span class="field-value">{{ driver.phone }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Email</span>
+                    <span class="field-value">{{ driver.email || '—' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">License Number</span>
+                    <span class="field-value">{{ driver.licenseNumber }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignment -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-link"></i> Assignment
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">College</span>
+                    <span class="field-value">{{ driver.collegeName || '—' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Assigned Bus</span>
+                    <span class="field-value">{{ driver.busNumber || 'Not Assigned' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Status</span>
+                    <span class="field-value">{{ driver.status }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Online Status</span>
+                    <span class="field-value">{{ driver.isOnline ? 'Online' : 'Offline' }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="detail-actions">
+        <a routerLink="/drivers" class="btn btn-ghost">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <a [routerLink]="['/drivers', driver.id, 'edit']" class="btn btn-secondary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <button (click)="deleteDriver()" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+</div>

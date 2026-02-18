@@ -1,0 +1,101 @@
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading bus details...
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+</div>
+
+<!-- Detail Card -->
+<div *ngIf="!loading && !error && bus" class="detail-card">
+    <!-- Hero Banner -->
+    <div class="detail-hero">
+        <div class="detail-avatar">
+            <i class="fas fa-bus"></i>
+        </div>
+        <div class="detail-hero-info">
+            <h2>Bus {{ bus.busNumber }}</h2>
+            <p style="color:rgba(255,255,255,0.7);margin:0.25rem 0 0.5rem;">{{ bus.title }}</p>
+            <div class="meta">
+                <span class="status-badge" [ngClass]="bus.status?.toLowerCase()">{{ bus.status }}</span>
+                <span style="color:rgba(255,255,255,0.6);font-size:0.85rem;">
+                    <i class="fas fa-university" style="margin-right:0.35rem;"></i>{{ bus.collegeName || 'N/A' }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Body -->
+    <div class="detail-body">
+        <!-- Bus Info -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-info-circle"></i> Bus Information
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">Bus Number</span>
+                    <span class="field-value">{{ bus.busNumber }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Title</span>
+                    <span class="field-value">{{ bus.title }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Capacity</span>
+                    <span class="field-value">{{ bus.capacity }} passengers</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Status</span>
+                    <span class="field-value">{{ bus.status }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assignment -->
+        <div class="detail-section">
+            <div class="detail-section-title">
+                <i class="fas fa-link"></i> Assignment
+            </div>
+            <div class="detail-grid">
+                <div class="detail-field">
+                    <span class="field-label">College</span>
+                    <span class="field-value">{{ bus.collegeName || '—' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Route</span>
+                    <span class="field-value">{{ bus.routeName || '—' }}</span>
+                </div>
+                <div class="detail-field">
+                    <span class="field-label">Driver</span>
+                    <span class="field-value">{{ bus.driverName || 'Not Assigned' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="detail-section" *ngIf="bus.description">
+            <div class="detail-section-title">
+                <i class="fas fa-align-left"></i> Description
+            </div>
+            <p style="color:var(--text-secondary);line-height:1.6;">{{ bus.description }}</p>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="detail-actions">
+        <a routerLink="/buses" class="btn btn-ghost">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+        <a [routerLink]="['/buses', bus.id, 'edit']" class="btn btn-secondary">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <button (click)="deleteBus()" class="btn btn-danger">
+            <i class="fas fa-trash"></i> Delete
+        </button>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Colleges</h1>
+    <input type="text" placeholder="Search colleges by name, email, phone..." (input)="onSearch($event)"
+        class="search-input">
+    <div class="actions">
+        <a routerLink="/colleges/new" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add College
+        </a>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading colleges...
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+</div>
+
+<!-- College Cards Grid -->
+<div *ngIf="!loading && !error" class="card-grid">
+    <div *ngFor="let college of filteredColleges" class="card">
+        <div class="card-header">
+            <div class="college-logo" style="margin-right: 15px;">
+                <img [src]="college.logo || 'assets/placeholder-college.png'" alt="{{ college.name }}" class="logo-img"
+                    style="width: 50px; height: 50px; object-fit: contain; border-radius: 50%; background: #f8f9fa; padding: 2px; border: 1px solid #e9ecef;"
+                    onerror="this.src='assets/placeholder-college.png'">
+            </div>
+            <div class="header-content">
+                <h3>{{ college.name }}</h3>
+                <span class="status-badge" [ngClass]="college.status?.toLowerCase() || 'active'">
+                    {{ college.status || 'Active' }}
+                </span>
+            </div>
+        </div>
+        <div class="card-content">
+            <p><i class="fas fa-user-circle"></i> {{ college.contactPerson }}</p>
+            <p><i class="fas fa-envelope"></i> {{ college.email }}</p>
+            <p><i class="fas fa-phone"></i> {{ college.phone }}</p>
+            <p class="address"><i class="fas fa-map-marker-alt"></i> {{ college.address }}</p>
+        </div>
+        <div class="card-actions">
+            <a [routerLink]="['/colleges', college.id]" class="btn btn-outline-primary">
+                <i class="fas fa-eye"></i> View
+            </a>
+            <a [routerLink]="['/colleges', college.id, 'edit']" class="btn btn-secondary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <button (click)="deleteCollege(college.id)" class="btn btn-danger">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Empty State -->
+<div *ngIf="!loading && !error && filteredColleges.length === 0" class="empty-state">
+    <i class="fas fa-university"></i>
+    <strong>No colleges found</strong>
+    <span>Try adjusting your search or add a new college.</span>
+</div>

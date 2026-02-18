@@ -1,0 +1,127 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1>{{ isEditMode ? 'Edit Bus' : 'Add New Bus' }}</h1>
+    <a routerLink="/buses" class="btn btn-ghost">
+        <i class="fas fa-arrow-left"></i> Back to List
+    </a>
+</div>
+
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i> Loading...
+</div>
+
+<!-- Form Container -->
+<div class="form-container" *ngIf="!loading">
+    <div class="form-container-header">
+        <i class="fas fa-bus"></i>
+        <h2>{{ isEditMode ? 'Update Bus Details' : 'Register New Bus' }}</h2>
+    </div>
+
+    <div class="form-body">
+        <div *ngIf="error" class="error-alert">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+
+        <form [formGroup]="busForm" (ngSubmit)="onSubmit()">
+            <!-- Identity -->
+            <div class="form-section-title">
+                <i class="fas fa-id-card"></i> Bus Identity
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="busNumber">Bus Number *</label>
+                    <input id="busNumber" type="text" formControlName="busNumber" class="form-control"
+                        placeholder="e.g. KA-01-F-1234">
+                    <div class="validation-error"
+                        *ngIf="busForm.get('busNumber')?.touched && busForm.get('busNumber')?.invalid">
+                        Bus Number is required
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <label for="title">Bus Title *</label>
+                    <input id="title" type="text" formControlName="title" class="form-control"
+                        placeholder="e.g. Morning Route 1">
+                    <div class="validation-error"
+                        *ngIf="busForm.get('title')?.touched && busForm.get('title')?.invalid">
+                        Title is required
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignment -->
+            <div class="form-section-title">
+                <i class="fas fa-link"></i> Assignment
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="routeId">Route *</label>
+                    <select id="routeId" formControlName="routeId" class="form-control">
+                        <option value="">Select Route</option>
+                        <option *ngFor="let route of routes" [value]="route.id">
+                            {{ route.name }}
+                        </option>
+                    </select>
+                    <div class="validation-error"
+                        *ngIf="busForm.get('routeId')?.touched && busForm.get('routeId')?.invalid">
+                        Route is required
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <label for="collegeId">College *</label>
+                    <select id="collegeId" formControlName="collegeId" class="form-control">
+                        <option value="">Select College</option>
+                        <option *ngFor="let college of colleges" [value]="college.id">
+                            {{ college.name }}
+                        </option>
+                    </select>
+                    <div class="validation-error"
+                        *ngIf="busForm.get('collegeId')?.touched && busForm.get('collegeId')?.invalid">
+                        College is required
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="form-section-title">
+                <i class="fas fa-sliders-h"></i> Details
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col">
+                    <label for="capacity">Capacity *</label>
+                    <input id="capacity" type="number" formControlName="capacity" class="form-control"
+                        placeholder="e.g. 40">
+                    <div class="validation-error"
+                        *ngIf="busForm.get('capacity')?.touched && busForm.get('capacity')?.invalid">
+                        Valid capacity is required
+                    </div>
+                </div>
+                <div class="form-group col">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        <option value="Maintenance">Maintenance</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description (Optional)</label>
+                <textarea id="description" formControlName="description" class="form-control" rows="3"
+                    placeholder="Additional notes about this bus..."></textarea>
+            </div>
+        </form>
+    </div>
+
+    <div class="form-actions">
+        <a routerLink="/buses" class="btn btn-ghost">Cancel</a>
+        <button type="submit" class="btn btn-primary" [disabled]="busForm.invalid || submitting" (click)="onSubmit()">
+            <i class="fas fa-spinner fa-spin" *ngIf="submitting"></i>
+            <i class="fas fa-save" *ngIf="!submitting"></i>
+            {{ submitting ? 'Saving...' : (isEditMode ? 'Update Bus' : 'Create Bus') }}
+        </button>
+    </div>
+</div>

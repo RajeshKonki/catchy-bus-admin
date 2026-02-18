@@ -1,0 +1,59 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Buses</h1>
+    <input type="text" placeholder="Search buses by number, route, college..." (input)="onSearch($event)"
+        class="search-input">
+    <div class="actions">
+        <a routerLink="/buses/new" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Bus
+        </a>
+    </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    Loading buses...
+</div>
+
+<!-- Error State -->
+<div *ngIf="error" class="error-state">
+    <i class="fas fa-exclamation-circle"></i>
+    {{ error }}
+</div>
+
+<!-- Bus Cards Grid -->
+<div *ngIf="!loading && !error" class="card-grid">
+    <div *ngFor="let bus of filteredBuses" class="card">
+        <div class="card-header">
+            <h3>{{ bus.busNumber }}</h3>
+            <span class="status-badge" [ngClass]="bus.status?.toLowerCase()">
+                {{ bus.status }}
+            </span>
+        </div>
+        <div class="card-content">
+            <p><i class="fas fa-tag"></i> {{ bus.title }}</p>
+            <p><i class="fas fa-route"></i> {{ bus.routeName || 'No Route' }}</p>
+            <p><i class="fas fa-university"></i> {{ bus.collegeName || 'N/A' }}</p>
+            <p><i class="fas fa-users"></i> {{ bus.capacity }} passengers</p>
+        </div>
+        <div class="card-actions">
+            <a [routerLink]="['/buses', bus.id]" class="btn btn-outline-primary">
+                <i class="fas fa-eye"></i> View
+            </a>
+            <a [routerLink]="['/buses', bus.id, 'edit']" class="btn btn-secondary">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <button (click)="deleteBus(bus.id)" class="btn btn-danger">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Empty State -->
+<div *ngIf="!loading && !error && filteredBuses.length === 0" class="empty-state">
+    <i class="fas fa-bus"></i>
+    <strong>No buses found</strong>
+    <span>Try adjusting your search or add a new bus.</span>
+</div>

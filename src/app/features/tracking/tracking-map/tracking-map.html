@@ -1,0 +1,119 @@
+<!-- Page Header -->
+<div class="page-header">
+    <h1>Live Tracking</h1>
+    <div class="actions">
+        <div class="search-input-wrapper" style="position:relative;display:flex;align-items:center;">
+            <i class="fas fa-search"
+                style="position:absolute;left:0.75rem;color:var(--text-muted);font-size:0.85rem;"></i>
+            <input type="text" placeholder="Enter bus number..." [(ngModel)]="busSearchInput" class="search-input"
+                style="padding-left:2.25rem;">
+        </div>
+        <button class="btn btn-primary" (click)="trackBus()">
+            <i class="fas fa-crosshairs"></i> Track Bus
+        </button>
+        <button class="btn btn-secondary" (click)="refreshTracking()">
+            <i class="fas fa-sync-alt" [class.fa-spin]="refreshing"></i> Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Status Bar -->
+<div class="tracking-status-bar">
+    <div class="status-item">
+        <span class="status-dot" [ngClass]="isTracking ? 'online' : 'offline'"></span>
+        <span>{{ isTracking ? 'Tracking Active' : 'Tracking Inactive' }}</span>
+    </div>
+    <div class="status-item">
+        <i class="fas fa-bus" style="color:var(--deep-blue);margin-right:0.35rem;"></i>
+        <span>{{ activeBuses.length }} Active Bus{{ activeBuses.length !== 1 ? 'es' : '' }}</span>
+    </div>
+    <div class="status-item" *ngIf="lastUpdate">
+        <i class="fas fa-clock" style="margin-right:0.35rem;color:var(--text-muted);"></i>
+        <span>Last updated: {{ lastUpdate }}</span>
+    </div>
+</div>
+
+<!-- Tracking Layout -->
+<div class="tracking-layout">
+    <!-- Map -->
+    <div class="map-wrapper">
+        <div id="tracking-map" class="map-container"></div>
+
+        <!-- Map Legend -->
+        <div class="map-legend">
+            <div class="legend-title">Legend</div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background:var(--green);"></span>
+                <span>Active Bus</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background:var(--location-red);"></span>
+                <span>Tracked Bus</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot" style="background:var(--deep-blue);"></span>
+                <span>Stop</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar Panel -->
+    <div class="tracking-sidebar">
+        <!-- Bus Info -->
+        <div class="tracking-panel">
+            <div class="panel-title">
+                <i class="fas fa-bus"></i> Bus Information
+            </div>
+            <div *ngIf="!selectedBus" class="panel-empty">
+                <i class="fas fa-search"></i>
+                <span>Enter a bus number to start tracking</span>
+            </div>
+            <div *ngIf="selectedBus" class="bus-info-list">
+                <div class="info-row">
+                    <span class="info-label">Bus Number</span>
+                    <span class="info-value">{{ selectedBus.busNumber }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Route</span>
+                    <span class="info-value">{{ selectedBus.routeName || '—' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Driver</span>
+                    <span class="info-value">{{ selectedBus.driverName || '—' }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Speed</span>
+                    <span class="info-value">{{ selectedBus.speed || 0 }} km/h</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Status</span>
+                    <span class="status-badge" [ngClass]="selectedBus.status?.toLowerCase()">
+                        {{ selectedBus.status }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Buses -->
+        <div class="tracking-panel">
+            <div class="panel-title">
+                <i class="fas fa-list"></i> Active Buses
+            </div>
+            <div *ngIf="activeBuses.length === 0" class="panel-empty">
+                <i class="fas fa-bus-alt"></i>
+                <span>No active buses right now</span>
+            </div>
+            <div *ngFor="let bus of activeBuses" class="active-bus-item" (click)="selectBus(bus)"
+                [class.selected]="selectedBus?.id === bus.id">
+                <div class="bus-icon-sm">
+                    <i class="fas fa-bus"></i>
+                </div>
+                <div>
+                    <div style="font-weight:600;font-size:0.85rem;">{{ bus.busNumber }}</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);">{{ bus.routeName || 'No route' }}</div>
+                </div>
+                <span class="status-dot online" style="margin-left:auto;"></span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="layout-container" [class.sidebar-collapsed]="isSidebarCollapsed">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon" *ngIf="isSidebarCollapsed">
+                    <img src="logo.png" alt="Logo" style="width: 40px; height: auto;">
+                </div>
+                <div class="logo-text" *ngIf="!isSidebarCollapsed"
+                    style="display: flex; align-items: center; gap: 10px;">
+                    <img src="logo.png" alt="Logo" style="width: 50px; height: auto;">
+                    <div>
+                        <span class="brand" style="display: block; line-height: 1.2;">Catchy Bus</span>
+                        <span class="sub" style="display: block; line-height: 1.2;">Admin Portal</span>
+                    </div>
+                </div>
+            </div>
+            <button class="toggle-btn" (click)="toggleSidebar()" *ngIf="!isSidebarCollapsed">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-chart-line"></i>
+                <span *ngIf="!isSidebarCollapsed">Dashboard</span>
+            </a>
+            <a routerLink="/tracking" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-map-marked-alt"></i>
+                <span *ngIf="!isSidebarCollapsed">Live Tracking</span>
+            </a>
+
+            <div class="nav-divider"></div>
+            <div class="nav-section-label">Management</div>
+
+            <a routerLink="/buses" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-bus"></i>
+                <span *ngIf="!isSidebarCollapsed">Buses</span>
+            </a>
+            <a routerLink="/drivers" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-user-tie"></i>
+                <span *ngIf="!isSidebarCollapsed">Drivers</span>
+            </a>
+            <a routerLink="/routes" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-route"></i>
+                <span *ngIf="!isSidebarCollapsed">Routes</span>
+            </a>
+            <a routerLink="/colleges" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-university"></i>
+                <span *ngIf="!isSidebarCollapsed">Colleges</span>
+            </a>
+            <a routerLink="/students" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-user-graduate"></i>
+                <span *ngIf="!isSidebarCollapsed">Students</span>
+            </a>
+
+            <div class="nav-divider"></div>
+            <div class="nav-section-label">System</div>
+
+            <a routerLink="/settings" routerLinkActive="active" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span *ngIf="!isSidebarCollapsed">Settings</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a routerLink="/settings" class="nav-item" style="margin:0;">
+                <div class="avatar"
+                    style="width:32px;height:32px;font-size:0.8rem;border-radius:6px;background:rgba(255,255,255,0.15);color:#fff;flex-shrink:0;">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div *ngIf="!isSidebarCollapsed" style="min-width:0;">
+                    <div
+                        style="font-size:0.82rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        Admin User</div>
+                    <div
+                        style="font-size:0.68rem;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.05em;">
+                        Administrator</div>
+                </div>
+            </a>
+        </div>
+    </aside>
+
+    <div class="main-content">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <button class="notif-btn" *ngIf="isSidebarCollapsed" (click)="toggleSidebar()"
+                    style="margin-right:0.25rem;">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            <div class="top-bar-right">
+                <div class="notif-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-dot"></span>
+                </div>
+                <div class="user-profile">
+                    <div class="profile-info">
+                        <span class="name">Admin User</span>
+                        <span class="role">Administrator</span>
+                    </div>
+                    <div class="avatar">
+                        A
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content-wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

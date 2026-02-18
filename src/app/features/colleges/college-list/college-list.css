@@ -1,0 +1,16 @@
+/* Using global styles from styles.css */
+
+.college-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.logo-img {
+    transition: transform 0.2s;
+}
+
+.logo-img:hover {
+    transform: scale(1.1);
+}
